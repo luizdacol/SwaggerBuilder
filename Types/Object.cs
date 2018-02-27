@@ -19,18 +19,18 @@ namespace YamlBuilder.Types
         public string ToYaml()
         {
             var result = new StringBuilder();
-            result.Append(base.Nome);
-            result.Append(":");
+            result.Append(base.Nome).Append(":");
 
-            result.AppendLine("\t");
-            result.Append("properties: ");
+            result.AppendLine();
+            result.Append("\t").Append("properties: ");
 
             foreach (var item in this.Properties)
             {
+                result.AppendLine();
                 if (item.Type == "array")
-                    result.AppendLine(Regex.Replace((item as SwaggerArray).ToYaml(), "^", @"\t"));
+                    result.Append("\t").Append(Regex.Replace((item as SwaggerArray).ToYaml(), "\n", "\n\t"));
                 else
-                    result.AppendLine(Regex.Replace((item as SwaggerPrimitive).ToYaml(), "^", @"\t"));
+                    result.Append("\t").Append(Regex.Replace((item as SwaggerPrimitive).ToYaml(), "\n", "\n\t"));
             }
 
             return result.ToString();

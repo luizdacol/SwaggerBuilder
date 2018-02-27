@@ -18,8 +18,10 @@ namespace YamlBuilder.Interpreters
             var primitives = new List<SwaggerPrimitive>();
             for (int i = 0; i < properties.Count; i++)
             {
+                var typeConverted = this.MapTypes.GetValueOrDefault(properties[i].Groups[1].Value) ?? properties[i].Groups[1].Value;
+                var formatConverted = this.MapFormats.GetValueOrDefault(properties[i].Groups[1].Value) ?? properties[i].Groups[1].Value;
                 primitives.Add(
-                    new SwaggerPrimitive(properties[i].Groups[2].Value, properties[i].Groups[1].Value)
+                    new SwaggerPrimitive(properties[i].Groups[2].Value, typeConverted, formatConverted)
                 );
             }
 
@@ -38,6 +40,18 @@ namespace YamlBuilder.Interpreters
             {"double", "number"},
             {"bool", "boolean"},
             {"DateTime", "string"}
+        };
+
+         private string DefineFormat(string type)
+        {
+            return MapFormats.GetValueOrDefault(type);
+        }
+
+        private Dictionary<string, string> MapFormats = new Dictionary<string, string>()
+        {
+            {"DateTime", "date-time"},
+            {"int", "int32"},
+            {"long", "int64"}
         };
     }
 }
